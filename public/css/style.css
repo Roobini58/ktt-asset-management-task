@@ -1,0 +1,19 @@
+body {
+  background-color: #f7f8fa;
+}
+
+.card {
+  border-radius: 10px;
+}
+
+.navbar-brand {
+  font-weight: 600;
+}
+
+table.dataTable {
+  font-size: 0.92rem;
+}
+
+.list-group-item strong {
+  text-transform: capitalize;
+}

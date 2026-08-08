@@ -1,0 +1,34 @@
+extends ../layout
+
+block content
+  h2.mb-4 Stock View
+  p.text-muted Bird's eye view of assets currently in stock and ready to issue.
+
+  each b in branches
+    .card.mb-4.shadow-sm
+      .card-header.d-flex.justify-content-between.align-items-center
+        strong= b.branch
+        span= `${b.count} asset(s) · ${Number(b.totalValue).toLocaleString('en-IN', {style:'currency', currency:'INR', maximumFractionDigits:0})}`
+      table.table.table-sm.mb-0
+        thead
+          tr
+            th Serial No.
+            th Category
+            th Make / Model
+            th Value
+        tbody
+          each a in b.assets
+            tr
+              td
+                a(href=`/assets/${a.id}`)= a.serialNumber
+              td= a.category ? a.category.name : '-'
+              td= `${a.make || ''} ${a.model || ''}`
+              td= Number(a.purchaseValue).toLocaleString('en-IN', {style:'currency', currency:'INR', maximumFractionDigits:0})
+
+  if branches.length === 0
+    p.text-muted No assets currently in stock.
+
+  .card.bg-light
+    .card-body.d-flex.justify-content-between
+      strong Grand Total
+      strong= `${grandTotalCount} asset(s) · ${Number(grandTotalValue).toLocaleString('en-IN', {style:'currency', currency:'INR', maximumFractionDigits:0})}`

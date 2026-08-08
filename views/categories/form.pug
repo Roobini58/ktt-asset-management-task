@@ -1,0 +1,21 @@
+extends ../layout
+
+block content
+  h2.mb-3= title
+
+  if errors && errors.length
+    .alert.alert-danger
+      ul.mb-0
+        each e in errors
+          li= e.msg
+
+  form(method="POST" action=category.id ? `/categories/${category.id}?_method=PUT` : '/categories')
+    .mb-3
+      label.form-label Name *
+      input.form-control(type="text" name="name" value=category.name required)
+    .mb-3
+      label.form-label Description
+      textarea.form-control(name="description" rows="3")= category.description
+
+    button.btn.btn-primary(type="submit") Save
+    a.btn.btn-link(href="/categories") Cancel

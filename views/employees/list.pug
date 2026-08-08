@@ -1,0 +1,50 @@
+extends ../layout
+
+block content
+  .d-flex.justify-content-between.align-items-center.mb-3
+    h2 Employee Master
+    a.btn.btn-primary(href="/employees/new") + Add Employee
+
+  form.row.g-2.mb-3(method="GET" action="/employees")
+    .col-auto
+      select.form-select(name="status" onchange="this.form.submit()")
+        option(value="all" selected=filters.status==="all") All
+        option(value="active" selected=filters.status==="active") Active
+        option(value="inactive" selected=filters.status==="inactive") Inactive
+    .col-auto
+      input.form-control(type="text" name="q" placeholder="Search name, code, email, department" value=filters.q)
+    .col-auto
+      button.btn.btn-outline-secondary(type="submit") Search
+
+  table#employeesTable.table.table-striped.table-hover.w-100
+    thead
+      tr
+        th Code
+        th Name
+        th Email
+        th Department
+        th Branch
+        th Status
+        th Actions
+    tbody
+      each emp in employees
+        tr
+          td= emp.employeeCode
+          td
+            a(href=`/employees/${emp.id}`)= emp.name
+          td= emp.email || '-'
+          td= emp.department || '-'
+          td= emp.branch || '-'
+          td
+            if emp.isActive
+              span.badge.bg-success Active
+            else
+              span.badge.bg-secondary Inactive
+          td
+            a.btn.btn-sm.btn-outline-primary(href=`/employees/${emp.id}/edit`) Edit
+
+block scripts
+  script.
+    $(function () {
+      $('#employeesTable').DataTable({ paging: true, order: [] });
+    });

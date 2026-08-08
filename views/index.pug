@@ -1,0 +1,46 @@
+extends layout
+
+block content
+  h2.mb-4 Dashboard
+
+  .row.g-3
+    .col-md-4.col-lg-2
+      .card.text-center.shadow-sm
+        .card-body
+          h6.text-muted Total Assets
+          h3= stats.totalAssets
+    .col-md-4.col-lg-2
+      .card.text-center.shadow-sm.border-success
+        .card-body
+          h6.text-muted In Stock
+          h3.text-success= stats.inStock
+    .col-md-4.col-lg-2
+      .card.text-center.shadow-sm.border-warning
+        .card-body
+          h6.text-muted Issued
+          h3.text-warning= stats.issued
+    .col-md-4.col-lg-2
+      .card.text-center.shadow-sm.border-danger
+        .card-body
+          h6.text-muted Scrapped
+          h3.text-danger= stats.scrapped
+    .col-md-4.col-lg-2
+      .card.text-center.shadow-sm
+        .card-body
+          h6.text-muted Active Employees
+          h3= stats.totalEmployees
+    .col-md-4.col-lg-2
+      .card.text-center.shadow-sm
+        .card-body
+          h6.text-muted Categories
+          h3= stats.totalCategories
+
+  .row.mt-5.g-3
+    .col-md-3
+      a.btn.btn-outline-primary.w-100.py-3(href="/issue") Issue Asset
+    .col-md-3
+      a.btn.btn-outline-secondary.w-100.py-3(href="/return") Return Asset
+    .col-md-3
+      a.btn.btn-outline-danger.w-100.py-3(href="/scrap") Scrap Asset
+    .col-md-3
+      a.btn.btn-outline-dark.w-100.py-3(href="/stock") View Stock

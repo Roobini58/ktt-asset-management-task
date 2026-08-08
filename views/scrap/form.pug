@@ -1,0 +1,49 @@
+extends ../layout
+
+block content
+  h2.mb-3 Scrap Asset
+  p.text-muted Marking an asset as scrapped removes it from all views except reports and history.
+
+  if errors && errors.length
+    .alert.alert-danger
+      ul.mb-0
+        each e in errors
+          li= e.msg
+
+  form(method="POST" action="/scrap")
+    .row.g-3
+      .col-md-6
+        label.form-label Asset *
+        select.form-select(name="assetId" required)
+          option(value="") Select asset
+          each a in eligibleAssets
+            option(value=a.id)= `${a.serialNumber} — ${a.category ? a.category.name : ''} (${a.status})`
+      .col-12
+        label.form-label Reason / Remarks *
+        textarea.form-control(name="remarks" rows="3" required placeholder="e.g. beyond repair, obsolete, lost")
+
+    .mt-4
+      button.btn.btn-danger(type="submit") Mark as Scrapped
+
+  hr.my-4
+  h5 Eligible Assets
+  table#scrapTable.table.table-sm.w-100
+    thead
+      tr
+        th Serial No.
+        th Category
+        th Status
+        th Held By
+    tbody
+      each a in eligibleAssets
+        tr
+          td= a.serialNumber
+          td= a.category ? a.category.name : '-'
+          td= a.status
+          td= a.currentEmployee ? a.currentEmployee.name : '-'
+
+block scripts
+  script.
+    $(function () {
+      $('#scrapTable').DataTable({ order: [] });
+    });

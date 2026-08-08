@@ -1,0 +1,54 @@
+extends ../layout
+
+block content
+  h2.mb-3 Issue Asset
+
+  if errors && errors.length
+    .alert.alert-danger
+      ul.mb-0
+        each e in errors
+          li= e.msg
+
+  form(method="POST" action="/issue")
+    .row.g-3
+      .col-md-6
+        label.form-label Asset (available in stock) *
+        select.form-select(name="assetId" required)
+          option(value="") Select asset
+          each a in availableAssets
+            option(value=a.id)= `${a.serialNumber} — ${a.category ? a.category.name : ''} ${a.make || ''} ${a.model || ''}`
+      .col-md-6
+        label.form-label Employee *
+        select.form-select(name="employeeId" required)
+          option(value="") Select employee
+          each e in employees
+            option(value=e.id)= `${e.employeeCode} — ${e.name}`
+      .col-12
+        label.form-label Remarks
+        textarea.form-control(name="remarks" rows="2")
+
+    .mt-4
+      button.btn.btn-primary(type="submit") Issue Asset
+
+  hr.my-4
+  h5 Assets Available in Stock
+  table#availableTable.table.table-sm.w-100
+    thead
+      tr
+        th Serial No.
+        th Category
+        th Make / Model
+        th Branch
+    tbody
+      each a in availableAssets
+        tr
+          td= a.serialNumber
+          td= a.category ? a.category.name : '-'
+          td= `${a.make || ''} ${a.model || ''}`
+          td= a.branch || '-'
+
+block scripts
+  script.
+    $(function () {
+      $('#availableTable').DataTable({ order: [] });
+    });

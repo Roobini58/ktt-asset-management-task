@@ -1,0 +1,54 @@
+extends ../layout
+
+block content
+  h2.mb-3 Return Asset
+
+  if errors && errors.length
+    .alert.alert-danger
+      ul.mb-0
+        each e in errors
+          li= e.msg
+
+  form(method="POST" action="/return")
+    .row.g-3
+      .col-md-6
+        label.form-label Asset (currently issued) *
+        select.form-select(name="assetId" required)
+          option(value="") Select asset
+          each a in issuedAssets
+            option(value=a.id)= `${a.serialNumber} — held by ${a.currentEmployee ? a.currentEmployee.name : 'Unknown'}`
+      .col-md-6
+        label.form-label Reason for Return *
+        select.form-select(name="reason" required)
+          option(value="") Select reason
+          each r in reasons
+            option(value=r)= r
+      .col-12
+        label.form-label Remarks
+        textarea.form-control(name="remarks" rows="2")
+
+    .mt-4
+      button.btn.btn-primary(type="submit") Return Asset
+
+  hr.my-4
+  h5 Currently Issued Assets
+  table#issuedTable.table.table-sm.w-100
+    thead
+      tr
+        th Serial No.
+        th Category
+        th Held By
+        th Branch
+    tbody
+      each a in issuedAssets
+        tr
+          td= a.serialNumber
+          td= a.category ? a.category.name : '-'
+          td= a.currentEmployee ? a.currentEmployee.name : '-'
+          td= a.branch || '-'
+
+block scripts
+  script.
+    $(function () {
+      $('#issuedTable').DataTable({ order: [] });
+    });

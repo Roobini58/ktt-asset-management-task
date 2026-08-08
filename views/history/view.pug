@@ -1,0 +1,40 @@
+extends ../layout
+
+block content
+  .d-flex.justify-content-between.align-items-center.mb-3
+    h2= `History — ${asset.serialNumber}`
+    a.btn.btn-outline-secondary(href="/history") Back to search
+
+  dl.row
+    dt.col-sm-2 Category
+    dd.col-sm-10= asset.category ? asset.category.name : '-'
+    dt.col-sm-2 Make / Model
+    dd.col-sm-10= `${asset.make || ''} ${asset.model || ''}`
+    dt.col-sm-2 Purchase Value
+    dd.col-sm-10= Number(asset.purchaseValue).toLocaleString('en-IN', {style:'currency', currency:'INR', maximumFractionDigits:0})
+    dt.col-sm-2 Current Status
+    dd.col-sm-10
+      if asset.status === 'IN_STOCK'
+        span.badge.bg-success In Stock
+      else if asset.status === 'ISSUED'
+        span.badge.bg-warning.text-dark Issued
+      else
+        span.badge.bg-danger Scrapped
+
+  h5.mt-4 Lifecycle
+  ul.list-group
+    each t in transactions
+      li.list-group-item
+        .d-flex.justify-content-between
+          div
+            strong= t.action
+            if t.employee
+              |  — #{t.employee.name}
+            if t.reason
+              |  (#{t.reason})
+          small.text-muted= new Date(t.actionDate).toLocaleString('en-IN')
+        if t.remarks
+          .text-muted.mt-1= t.remarks
+
+  if transactions.length === 0
+    p.text-muted No transaction history recorded yet.

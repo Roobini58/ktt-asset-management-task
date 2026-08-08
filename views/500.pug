@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  .text-center.py-5
+    h1 Something went wrong
+    p.text-muted An unexpected error occurred.
+    if error && error.message
+      pre.text-start.bg-light.p-3= error.stack || error.message
+    a.btn.btn-primary(href="/") Go home

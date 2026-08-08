@@ -1,0 +1,52 @@
+extends ../layout
+
+block content
+  h2.mb-3 Reports — Full Asset Register
+  p.text-muted This is the only view where scrapped assets remain visible alongside active ones.
+
+  form.row.g-2.mb-3(method="GET" action="/reports")
+    .col-auto
+      select.form-select(name="status" onchange="this.form.submit()")
+        option(value="all" selected=filters.status==="all") All Statuses
+        option(value="IN_STOCK" selected=filters.status==="IN_STOCK") In Stock
+        option(value="ISSUED" selected=filters.status==="ISSUED") Issued
+        option(value="SCRAPPED" selected=filters.status==="SCRAPPED") Scrapped
+
+  table#reportsTable.table.table-striped.table-hover.w-100
+    thead
+      tr
+        th Serial No.
+        th Category
+        th Make / Model
+        th Branch
+        th Value
+        th Status
+        th Held By
+    tbody
+      each a in assets
+        tr
+          td
+            a(href=`/assets/${a.id}`)= a.serialNumber
+          td= a.category ? a.category.name : '-'
+          td= `${a.make || ''} ${a.model || ''}`
+          td= a.branch || '-'
+          td= Number(a.purchaseValue).toLocaleString('en-IN', {style:'currency', currency:'INR', maximumFractionDigits:0})
+          td
+            if a.status === 'IN_STOCK'
+              span.badge.bg-success In Stock
+            else if a.status === 'ISSUED'
+              span.badge.bg-warning.text-dark Issued
+            else
+              span.badge.bg-danger Scrapped
+          td= a.currentEmployee ? a.currentEmployee.name : '-'
+    tfoot
+      tr
+        th(colspan="4") Total
+        th= Number(totalValue).toLocaleString('en-IN', {style:'currency', currency:'INR', maximumFractionDigits:0})
+        th(colspan="2")
+
+block scripts
+  script.
+    $(function () {
+      $('#reportsTable').DataTable({ order: [] });
+    });

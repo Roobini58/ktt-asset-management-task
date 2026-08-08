@@ -1,0 +1,41 @@
+extends ../layout
+
+block content
+  h2.mb-3 Asset History
+  p.text-muted Select an asset to view its full lifecycle from purchase to scrap.
+
+  form.row.g-2.mb-3(method="GET" action="/history")
+    .col-auto
+      input.form-control(type="text" name="q" placeholder="Search serial, make, model" value=filters.q)
+    .col-auto
+      button.btn.btn-outline-secondary(type="submit") Search
+
+  table#historySearchTable.table.table-striped.table-hover.w-100
+    thead
+      tr
+        th Serial No.
+        th Category
+        th Make / Model
+        th Status
+        th
+    tbody
+      each a in assets
+        tr
+          td= a.serialNumber
+          td= a.category ? a.category.name : '-'
+          td= `${a.make || ''} ${a.model || ''}`
+          td
+            if a.status === 'IN_STOCK'
+              span.badge.bg-success In Stock
+            else if a.status === 'ISSUED'
+              span.badge.bg-warning.text-dark Issued
+            else
+              span.badge.bg-danger Scrapped
+          td
+            a.btn.btn-sm.btn-outline-dark(href=`/history/${a.id}`) View History
+
+block scripts
+  script.
+    $(function () {
+      $('#historySearchTable').DataTable({ order: [] });
+    });

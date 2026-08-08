@@ -1,0 +1,45 @@
+extends ../layout
+
+block content
+  h2.mb-3= title
+
+  if errors && errors.length
+    .alert.alert-danger
+      ul.mb-0
+        each e in errors
+          li= e.msg
+
+  form(method="POST" action=asset.id ? `/assets/${asset.id}?_method=PUT` : '/assets')
+    .row.g-3
+      .col-md-4
+        label.form-label Serial Number *
+        input.form-control(type="text" name="serialNumber" value=asset.serialNumber required)
+      .col-md-4
+        label.form-label Category *
+        select.form-select(name="categoryId" required)
+          option(value="") Select category
+          each cat in categories
+            option(value=cat.id selected=(String(asset.categoryId)===String(cat.id)))= cat.name
+      .col-md-4
+        label.form-label Branch
+        input.form-control(type="text" name="branch" value=asset.branch)
+      .col-md-6
+        label.form-label Make
+        input.form-control(type="text" name="make" value=asset.make)
+      .col-md-6
+        label.form-label Model
+        input.form-control(type="text" name="model" value=asset.model)
+      .col-md-6
+        label.form-label Purchase Date
+        - var pd = asset.purchaseDate ? String(asset.purchaseDate).slice(0,10) : ''
+        input.form-control(type="date" name="purchaseDate" value=pd)
+      .col-md-6
+        label.form-label Purchase Value (INR) *
+        input.form-control(type="number" step="0.01" min="0" name="purchaseValue" value=asset.purchaseValue required)
+      .col-12
+        label.form-label Notes
+        textarea.form-control(name="notes" rows="3")= asset.notes
+
+    .mt-4
+      button.btn.btn-primary(type="submit") Save
+      a.btn.btn-link(href="/assets") Cancel

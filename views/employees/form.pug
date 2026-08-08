@@ -1,0 +1,42 @@
+extends ../layout
+
+block content
+  h2.mb-3= title
+
+  if errors && errors.length
+    .alert.alert-danger
+      ul.mb-0
+        each e in errors
+          li= e.msg
+
+  form(method="POST" action=employee.id ? `/employees/${employee.id}?_method=PUT` : '/employees')
+    .row.g-3
+      .col-md-4
+        label.form-label Employee Code *
+        input.form-control(type="text" name="employeeCode" value=employee.employeeCode required)
+      .col-md-8
+        label.form-label Name *
+        input.form-control(type="text" name="name" value=employee.name required)
+      .col-md-6
+        label.form-label Email
+        input.form-control(type="email" name="email" value=employee.email)
+      .col-md-6
+        label.form-label Phone
+        input.form-control(type="text" name="phone" value=employee.phone)
+      .col-md-4
+        label.form-label Department
+        input.form-control(type="text" name="department" value=employee.department)
+      .col-md-4
+        label.form-label Designation
+        input.form-control(type="text" name="designation" value=employee.designation)
+      .col-md-4
+        label.form-label Branch
+        input.form-control(type="text" name="branch" value=employee.branch)
+      .col-12
+        .form-check
+          input.form-check-input(type="checkbox" name="isActive" id="isActive" checked=(employee.isActive === undefined ? true : employee.isActive))
+          label.form-check-label(for="isActive") Active
+
+    .mt-4
+      button.btn.btn-primary(type="submit") Save
+      a.btn.btn-link(href="/employees") Cancel
