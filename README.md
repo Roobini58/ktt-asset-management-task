@@ -3,8 +3,9 @@
 A Node.js/Express web app for tracking company assets (laptops, phones, modems, tools, etc.)
 issued to employees — built to the KT Telematic Asset Management Project spec.
 
-**Stack:** Node.js (Express) · PostgreSQL · Sequelize ORM · Pug (the current name for **Jade** —
-Jade was renamed to Pug in 2016, syntax is unchanged) · Bootstrap 5 · DataTables.net
+**Stack:** Node.js (Express) · PostgreSQL · Sequelize ORM · Pug (Jade) · Bootstrap 5 · DataTables.net
+
+**Architecture:** Router ➔ Controller ➔ Service ➔ Repository
 
 ## Features
 
@@ -23,6 +24,15 @@ Jade was renamed to Pug in 2016, syntax is unchanged) · Bootstrap 5 · DataTabl
    ... → Scrapped)
 
 Plus a dashboard with live counts and a Reports module for the full asset register.
+
+## Architecture & Layering
+
+The application implements a clean **Controller - Service - Repository** design pattern:
+
+- **Routes (`/routes`)**: Maps HTTP request verbs and paths to Controllers and connects `express-validator` middleware.
+- **Controllers (`/controllers`)**: Manages HTTP requests/responses, validates input errors, calls Services, sets flash notifications, and renders Pug views (`res.render(...)`).
+- **Services (`/services`)**: Implements domain business logic, handles multi-step database transactions (e.g. issuing, returning, scrapping, and recording transaction audit entries), and performs aggregate calculations.
+- **Repositories (`/repositories`)**: Encapsulates Sequelize database operations (`findAll`, `findByPk`, `create`, `update`, `count`).
 
 ## Prerequisites
 
@@ -74,12 +84,14 @@ asset-management/
 ├── app.js                 Express app entry point
 ├── config/config.js       Sequelize CLI + connection config (reads .env)
 ├── models/                Sequelize models (Employee, AssetCategory, Asset, AssetTransaction)
+├── repositories/          Database access layer (Sequelize queries)
+├── services/              Business logic & transaction management
+├── controllers/           HTTP request handlers & view rendering
+├── routes/                HTTP route definitions & validation rules
 ├── migrations/            DB schema migrations (run in order)
-├── seeders/                Demo data
-├── routes/                 One router per module (employees, categories, assets,
-│                           stock, issue, return, scrap, history, reports)
-├── views/                  Pug templates, one folder per module
-└── public/                 Static CSS/JS
+├── seeders/               Demo data
+├── views/                 Pug templates, one folder per module
+└── public/                Static CSS/JS
 ```
 
 ## Data model notes
